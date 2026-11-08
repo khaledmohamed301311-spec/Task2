@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>Task 2 - نظام إدارة نتائج الطلاب</title>
+</head>
+<body>
+<h2>افتحي الـ Console عشان تشوفي النتائج</h2>
+<p>دوسي F12 او كليك يمين ثم Inspect ثم Console</p>
+
+<script>
+// 1. كلاس الطالب
+class Student {
+  constructor(id, name, grades, attendance) {
+    this.id = id;
+    this.name = name;
+    this.grades = grades;
+    this.attendance = attendance;
+  }
+
+  // حساب المتوسط بـ reduce
+  getAverage() {
+    const sum = this.grades.reduce((acc, grade) => acc + grade, 0);
+    return sum / this.grades.length;
+  }
+
+  // التقدير
+  getGrade() {
+    const avg = this.getAverage();
+    if (avg >= 90) return "A";
+    else if (avg >= 80) return "B";
+    else if (avg >= 70) return "C";
+    else if (avg >= 60) return "D";
+    else if (avg >= 50) return "E";
+    else return "F";
+  }
+
+  // النتيجة النهائية بـ &&
+  getResult() {
+    const avg = this.getAverage();
+    if (avg >= 50 && this.attendance >= 75) {
+      return "ناجح";
+    } else {
+      return "يحتاج مراجعة";
+    }
+  }
+}
+
+// 2. مصفوفة الطلاب - 4 طلاب منهم متعثرين
+const studentsList = [
+  new Student(1, "آية", [85, 90, 88], 95),
+  new Student(2, "خالد", [45, 42, 48], 80),
+  new Student(3, "منى", [72, 68, 75], 90),
+  new Student(4, "عمر", [40, 44, 41], 70)
+];
+
+// 3. تقرير لكل طالب
+console.log("=== تقرير الطلاب ===");
+studentsList.forEach(student => {
+  console.log(`الاسم: ${student.name} | المتوسط: ${student.getAverage().toFixed(2)} | التقدير: ${student.getGrade()} | النتيجة: ${student.getResult()}`);
+});
+
+// 4. لجنة الرأفة
+// الاستخراج بـ filter : متوسط بين 40 و 49
+const strugglingStudents = studentsList.filter(student => {
+  const avg = student.getAverage();
+  return avg >= 40 && avg < 50;
+});
+
+// المعالجة بـ map : +5 درجات رأفة
+const afterMercy = strugglingStudents.map(student => student.getAverage() + 5);
+
+// التحليل بـ reduce : جمع المتوسطات الجديدة
+const totalAfterMercy = afterMercy.reduce((acc, avg) => acc + avg, 0);
+
+// متوسط الرأفة مع درع حماية من القسمة على صفر
+const mercyAverage = afterMercy.length > 0 ? totalAfterMercy / afterMercy.length : 0;
+
+console.log("=== الطلاب المتعثرين بعد الرأفة ===");
+console.log(afterMercy);
+console.log(`متوسط درجات الطلاب المتعثرين بعد التعديل: ${mercyAverage.toFixed(2)}`);
+</script>
+</body>
+</html>
